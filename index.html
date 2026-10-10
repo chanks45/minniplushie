@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id" style="background: transparent !important; background-color: rgba(0,0,0,0) !important;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Mini Plushie | FiveM Vehicle HUD</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body style="background: transparent !important; background-color: rgba(0,0,0,0) !important;">
+  <main id="cockpit" class="theme-orange" aria-label="Mini Plushie cat vehicle HUD">
+    <!-- MENU PENGATURAN TERLETAK TEPAT DI ATAS SPEEDOMETER -->
+    <div id="settingsMenu">
+      <div class="settings-heading">
+        <span class="settings-dot"></span>
+        <span>PLUSHIE CONFIG</span>
+        <button id="closeSettings" class="icon-button" type="button" aria-label="Tutup pengaturan">×</button>
+      </div>
+
+      <div class="menu-btns">
+        <button type="button" data-act="resize">Resize</button>
+        <button type="button" data-act="move">Pindah</button>
+        <button type="button" data-act="reset">Reset</button>
+        <button type="button" data-act="theme">Theme</button>
+      </div>
+
+      <!-- PEMUTAR MUSIK YOUTUBE PERSIS SAMC -->
+      <section id="music-panel" class="music-panel no-drag" aria-label="Online Music Player">
+        <div class="music-now-playing">
+          <div class="music-video-wrap">
+            <div id="youtube-player"></div>
+            <img id="music-cover" class="music-cover" alt="" aria-hidden="true">
+            <div id="music-player-placeholder" class="music-placeholder">
+              <span class="music-placeholder-note" aria-label="Music">♪</span>
+            </div>
+          </div>
+          <div class="music-track-meta">
+            <div id="music-track-title">Belum ada lagu</div>
+            <div id="music-track-subtitle">Online playback</div>
+          </div>
+        </div>
+
+        <div class="music-progress-row">
+          <span id="music-current-time">0:00</span>
+          <input id="music-progress" class="music-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Song progress">
+          <span id="music-duration">0:00</span>
+        </div>
+
+        <div class="music-main-controls">
+          <button id="btn-music-prev" class="music-control-btn" type="button" title="Previous">⏮</button>
+          <button id="btn-music-play" class="music-play-btn" type="button" title="Play / Pause">▶</button>
+          <button id="btn-music-next" class="music-control-btn" type="button" title="Next">⏭</button>
+        </div>
+
+        <div class="music-volume-row">
+          <button id="btn-music-mute" class="music-icon-btn" type="button" title="Mute">🔊</button>
+          <input id="music-volume" class="music-range" type="range" min="0" max="100" value="80" step="1" aria-label="Volume">
+          <button id="btn-music-add-toggle" class="music-small-btn music-add-toggle" type="button" title="Tambah lagu">＋</button>
+        </div>
+
+        <div id="music-add-row" class="music-add-row hide">
+          <input id="music-url-input" type="text" placeholder="Link YouTube / ID Video" autocomplete="off">
+          <input id="music-title-input" type="text" placeholder="Nama lagu (opsional)" autocomplete="off">
+          <button id="btn-music-add" class="music-small-btn music-add-primary" type="button">▶</button>
+        </div>
+
+        <div class="music-tools-row">
+          <button id="btn-music-repeat" class="music-tool-btn" type="button" title="Ulangi lagu">↻</button>
+          <button id="btn-music-shuffle" class="music-tool-btn" type="button" title="Putar acak">⤨</button>
+        </div>
+
+        <div class="music-playlist-head">
+          <span>Playlist</span>
+          <button id="btn-music-clear" class="music-text-btn" type="button" title="Kosongkan playlist">×</button>
+        </div>
+        <div id="music-playlist" class="music-playlist" role="list">
+          <div class="music-empty">Playlist kosong. Tekan + untuk menambah lagu.</div>
+        </div>
+      </section>
+
+      <div id="settingsHint">Klik kanan untuk menutup menu</div>
+      <div class="settings-footer">
+        <span>MINI PLUSHIE</span>
+        <span>CAT BUILD 01</span>
+      </div>
+    </div>
+
+    <!-- TAMPILAN SPEEDOMETER KUCING PUTIH: MINI PLUSHIE -->
+    <section class="shiba-wrap" aria-label="Mini Plushie cat speedometer">
+      <div class="hud-topline"><span class="paw-dot"></span><span>MINI PLUSHIE</span><span id="engineStatus" class="engine-state">ENGINE OFF</span></div>
+      <svg id="mechaAvatar" class="shiba-head" viewBox="0 0 420 370" role="button" tabindex="0" aria-label="Mini Plushie Cat HUD. Klik untuk suara squeak" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="70%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#e9edf5"/>
+          </linearGradient>
+          <linearGradient id="cream" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#f5f7fb"/>
+          </linearGradient>
+          <linearGradient id="earInner" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffb3c7"/>
+            <stop offset="100%" stop-color="#f78da8"/>
+          </linearGradient>
+          <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%">
+            <feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#403248" flood-opacity=".12"/>
+          </filter>
+        </defs>
+
+        <!-- Telinga Kucing (Indikator Sein Kiri & Kanan) -->
+        <g class="shiba-ears">
+          <path class="ear ear-left" d="M86 126 Q58 86 68 22 Q72 13 88 22 L154 86 Q160 98 142 122Z" fill="url(#fur)" stroke="#5e4963" stroke-width="5" stroke-linejoin="round"/>
+          <path class="ear-inner ear-inner-left" d="M88 94 Q76 66 77 38 L126 86Z" fill="url(#earInner)"/>
+          <path d="M86 78 Q96 74 91 88" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+          <path class="ear ear-right" d="M334 126 Q362 86 352 22 Q348 13 332 22 L266 86 Q260 98 278 122Z" fill="url(#fur)" stroke="#5e4963" stroke-width="5" stroke-linejoin="round"/>
+          <path class="ear-inner ear-inner-right" d="M332 94 Q344 66 343 38 L294 86Z" fill="url(#earInner)"/>
+          <path d="M334 78 Q324 74 329 88" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- Kepala Bulu Kucing Putih yang Cantik -->
+        <path class="head-fur" d="M93 109 Q103 76 151 78 Q210 52 269 78 Q317 76 327 109 Q360 148 352 215 Q343 286 284 310 Q248 327 210 327 Q172 327 136 310 Q77 286 68 215 Q60 148 93 109Z" fill="url(#fur)" stroke="#5e4963" stroke-width="5" filter="url(#softShadow)"/>
+
+        <!-- Area Pipi Chubby & Moncong Halus Kucing -->
+        <path d="M104 190 Q112 154 150 158 Q181 161 210 199 Q239 161 270 158 Q308 154 316 190 Q318 241 275 279 Q246 302 210 302 Q174 302 145 279 Q102 241 104 190Z" fill="url(#cream)"/>
+        <path d="M104 185 Q128 163 158 183 Q176 194 183 214 Q148 208 132 228 Q113 217 104 185Z" fill="#ffffff" opacity=".85"/>
+        <path d="M316 185 Q292 163 262 183 Q244 194 237 214 Q272 208 288 228 Q307 217 316 185Z" fill="#ffffff" opacity=".85"/>
+
+        <!-- Bulu Mata Cantik Kucing -->
+        <g class="cat-lashes" stroke="#5e4963" stroke-width="3" stroke-linecap="round" fill="none">
+          <path d="M110 156 Q103 147 98 142"/>
+          <path d="M117 146 Q113 135 110 129"/>
+          <path d="M310 156 Q317 147 322 142"/>
+          <path d="M303 146 Q307 135 310 129"/>
+        </g>
+
+        <!-- Mata Kiri: Spidometer Digital -->
+        <g class="speed-eye">
+          <ellipse cx="151" cy="174" rx="48" ry="42" fill="#fffdfa" stroke="#5e4963" stroke-width="4"/>
+          <ellipse cx="151" cy="177" rx="39" ry="33" fill="#2d2233"/>
+          <text id="speedValue" x="151" y="178" text-anchor="middle" class="speed-number">000</text>
+          <text id="speedUnit" x="151" y="199" text-anchor="middle" class="speed-unit">KM/H</text>
+          <path class="eye-shine" d="M128 155 Q136 146 144 153" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+          <path class="tear tear-left" d="M110 188 Q98 205 109 215 Q122 211 116 196Z" fill="#7edbff"/>
+        </g>
+
+        <!-- Mata Kanan: Tachometer RPM -->
+        <g class="rpm-eye">
+          <circle cx="269" cy="174" r="43" fill="#fffdfa" stroke="#5e4963" stroke-width="4"/>
+          <circle cx="269" cy="174" r="34" fill="#2d2233"/>
+          <circle class="rpm-track" cx="269" cy="174" r="27" fill="none" stroke="#5b4863" stroke-width="5"/>
+          <circle id="rpmArc" class="rpm-arc" cx="269" cy="174" r="27" fill="none" stroke="#ff8ca3" stroke-width="5" stroke-linecap="round" stroke-dasharray="169.65" stroke-dashoffset="169.65" transform="rotate(-90 269 174)"/>
+          <text x="269" y="171" text-anchor="middle" class="rpm-caption">RPM</text><text id="rpmValue" x="269" y="188" text-anchor="middle" class="rpm-number">0000</text>
+          <path class="eye-shine" d="M247 155 Q255 146 263 153" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+          <path class="tear tear-right" d="M309 188 Q321 205 310 215 Q297 211 303 196Z" fill="#7edbff"/>
+        </g>
+
+        <!-- Pipi Merona Merah Muda (BBM & Health) -->
+        <g class="blushes">
+          <ellipse class="blush blush-left" cx="113" cy="229" rx="25" ry="14" fill="#ffb0c4"/>
+          <ellipse class="blush blush-right" cx="307" cy="229" rx="25" ry="14" fill="#ffb0c4"/>
+          <text id="fuelValue" x="113" y="233" text-anchor="middle" class="blush-value">100%</text>
+          <text id="healthValue" x="307" y="233" text-anchor="middle" class="blush-value">100%</text>
+        </g>
+
+        <!-- Kumis Kucing Cantik (Cat Whiskers) -->
+        <g class="whiskers" stroke="#5e4963" stroke-width="2.6" stroke-linecap="round" opacity="0.8">
+          <path d="M136 225 Q100 220 66 226"/>
+          <path d="M134 235 Q96 236 64 246"/>
+          <path d="M137 245 Q102 253 72 264"/>
+          <path d="M284 225 Q320 220 354 226"/>
+          <path d="M286 235 Q324 236 356 246"/>
+          <path d="M283 245 Q318 253 348 264"/>
+        </g>
+
+        <!-- Hidung Mungil & Mulut Kucing Cantik :3 -->
+        <g class="mouth-group">
+          <polygon points="204,222 216,222 210,229" fill="#ff7da0" stroke="#db5177" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M192 233 Q202 241 210 232 Q218 241 228 233" fill="none" stroke="#5e4963" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M204 236 Q210 249 216 236 Z" fill="#ff7297" stroke="#cb466d" stroke-width="2"/>
+          <path class="tongue-line" d="M210 238 L210 245" fill="none" stroke="#b63459" stroke-width="2" stroke-linecap="round"/>
+        </g>
+
+        <g class="panic-marks" stroke="#ff4f70" stroke-width="5" stroke-linecap="round">
+          <path d="M61 137l-12 -8 M70 116l-5 -13 M359 137l12 -8 M350 116l5 -13"/>
+        </g>
+      </svg>
+      <div class="face-caption"><span class="caption-pill">SPEED</span><span class="caption-pill">FUEL <b id="fuelMini">100%</b></span><span class="caption-pill">ENGINE <b id="healthMini">100%</b></span></div>
+      <div class="collar"><span class="collar-tag">MINI PLUSHIE</span><span class="collar-band"></span><span class="gear-pendant"><small>GEAR</small><b id="gearValue">N</b></span></div>
+      <div class="dog-status-row">
+        <div id="engineCheck" class="vehicle-indicator" title="Engine check"><span>⚙</span><small>ENG</small></div>
+        <div id="seatbeltIndicator" class="vehicle-indicator" title="Seatbelt"><span>♡</span><small>BELT</small></div>
+        <div id="headlightIndicator" class="vehicle-indicator" title="Headlights"><span>☼</span><small id="headlightLabel">LIGHT</small></div>
+        <div id="leftIndicator" class="vehicle-indicator turn-indicator" title="Sein kiri"><span>◀</span><small>LEFT</small></div>
+        <div id="rightIndicator" class="vehicle-indicator turn-indicator" title="Sein kanan"><span>▶</span><small>RIGHT</small></div>
+      </div>
+      <div class="dog-bottom"><span class="clock-chip">◷ <b id="clockValue">00:00</b></span><span class="odo-chip">ODO <b id="odometerValue">000000.0</b></span></div>
+      <div id="aiMessage" class="ai-message" aria-live="polite">MEOW! READY TO ROLL</div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
